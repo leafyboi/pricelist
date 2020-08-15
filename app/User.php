@@ -39,6 +39,6 @@ class User extends Authenticatable
 
     public function priceLists()
     {
-        return $this->hasMany('App\PriceList');
+        return $this->belongsToMany('App\PriceList');
     }
 }

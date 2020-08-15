@@ -12,6 +12,6 @@ class Good extends Model
 
     public function priceLists()
     {
-        return $this->hasMany('App\PriceList');
+        return $this->belongsToMany('App\PriceList');
     }
 }
