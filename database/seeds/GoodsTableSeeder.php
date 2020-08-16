@@ -21,7 +21,7 @@ class GoodsTableSeeder extends Seeder
             $article_code = $i+1000;
             $price = rand(1000,10000);
 
-            $priceLists[] = [
+            $goods[] = [
                 'name' => $name,
                 'description' => $description,
                 'article_code' => $article_code,
