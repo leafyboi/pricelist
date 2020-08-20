@@ -7,21 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Good
  * @package App
+ * @property int $id
+ * @property string $name
+ * @property string $decription
+ * @property int $article_code
+ * @property int $price
+ * @property int $price_list_id
  */
 class Good extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name', 'description', 'article_code', 'price', 'price_list_id'
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function priceLists()
     {
         return $this->belongsToMany('App\PriceList');
