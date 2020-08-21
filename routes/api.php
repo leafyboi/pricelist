@@ -22,6 +22,13 @@ Route::group([], function () {
     Route::post('register','AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout')->middleware('auth:api');
+
     Route::post('good', 'GoodsController@addGood');
+
     Route::post('price_list', 'PriceListsController@addPriceList');
+    Route::get('price_list', 'PriceListsController@getPriceList');
+    Route::get('price_lists', 'PriceListsController@getUserPriceLists');
+    Route::patch('price_list', 'PriceListsController@updatePriceList');
+    Route::delete('price_list', 'PriceListsController@deletePriceList');
+
 });

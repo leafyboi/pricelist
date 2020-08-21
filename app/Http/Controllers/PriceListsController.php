@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PriceList;
+use App\Models\Good;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -22,9 +23,9 @@ class PriceListsController extends Controller
 
         $price_list = PriceList::create($data);
 
-        $user_id = User::find($user_id);
+        $user = User::find($user_id);
 
-        if ($user_id === null) {
+        if ($user === null) {
             return response()->json([
                 'errors' => [
                     'type' => 'UserNotFound',
@@ -38,19 +39,99 @@ class PriceListsController extends Controller
                     'id' => $price_list->id,
                 ],
                 'message' => 'Прайс лист успешно создан.'
-            ]);
+            ], 201);
         }
     }
 
     public function getUserPriceLists(Request $request)
     {
         $user_id = $request->input('user_id');
+
         $price_lists = PriceList::where('user_id', $user_id)->orderBy('created_at', 'asc')->get();
+
         $user = User::find($user_id);
-        $sd = $user->name
 
         if ($user === null) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'UserNotFound',
+                    'message' => 'Пользователь с данным ID не найден.'],
+                'message' => 'В процессе просмотра прайс-листов произошли ошибки'
+            ], 201);
+        }
+        else {
+            return response()->json([
+                'price_lists' => $price_lists
+            ], 200);
+        }
+    }
 
+    public function getPriceList(Request $request)
+    {
+        $price_list_id = $request->input('id');
+
+        $price_list = PriceList::where('id', $price_list_id)
+            ->with('goods')
+            ->get();
+
+        if ($price_list === null) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'PriceListNotFound',
+                    'message' => 'Прайс-лист с данным ID не найден.'],
+                'message' => 'В процессе просмотра прайс-листа возникли ошибки'
+            ], 201);
+        }
+        else {
+            return response()->json([
+                'price_list' => $price_list
+            ], 200);
+        }
+    }
+
+    public function updatePriceList(Request $request)
+    {
+        $price_list_id = $request->input('id');
+        $price_list = PriceList::find($price_list_id);
+
+        if ($price_list === null) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'PriceListNotFound',
+                    'message' => 'Прайс-лист с данным ID не найден.'],
+                'message' => 'В процессе обновления информации о прайс-листе возникли ошибки.'],404);}
+        else {
+            $price_list->fill($request->only([
+                'name' => $request->name,
+                'description' => $request->description]));
+            $price_list->save();
+
+            return response()->json([
+                'message' => 'Прайс-лист успешно обновлен.'
+            ],201);
+        }
+    }
+
+    public function deletePriceList(Request $request)
+    {
+        $price_list_id = $request->input('id');
+
+        $price_list = PriceList::find($price_list_id);
+
+        if ($price_list === null) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'PriceListNotFound',
+                    'message' => 'Прайс-лист с таким id не найден.'],
+                'message' => 'В процессе удаления прайс-листа возникли ошибки.'
+            ], 404);
+        }
+        else {
+            $price_list->delete();
+
+            return response()->json([
+                'message' => 'Прайс-лист успешно удален.'
+            ], 201);
         }
     }
 }

@@ -21,11 +21,11 @@ class PriceList extends Model
 
     public function goods()
     {
-        return $this->belongsToMany('App\Good');
+        return $this->HasMany('App\Models\Good');
     }
 
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->hasOne('App\Models\User');
     }
 }
