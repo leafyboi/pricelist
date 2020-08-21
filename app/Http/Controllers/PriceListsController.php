@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Good;
 use App\Models\PriceList;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class PriceListsController extends Controller
 {
@@ -22,7 +22,7 @@ class PriceListsController extends Controller
 
         $price_list = PriceList::create($data);
 
-        $user_id = PriceList::find($user_id);
+        $user_id = User::find($user_id);
 
         if ($user_id === null) {
             return response()->json([
@@ -34,11 +34,23 @@ class PriceListsController extends Controller
         }
         else {
             return response()->json([
-                'good' => [
+                'price_list' => [
                     'id' => $price_list->id,
                 ],
                 'message' => 'Прайс лист успешно создан.'
             ]);
+        }
+    }
+
+    public function getUserPriceLists(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $price_lists = PriceList::where('user_id', $user_id)->orderBy('created_at', 'asc')->get();
+        $user = User::find($user_id);
+        $sd = $user->name
+
+        if ($user === null) {
+
         }
     }
 }

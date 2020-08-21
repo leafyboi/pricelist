@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $description
  * @property int $user_id
+ * @property Good $goods
+ * @property User $user
  */
 class PriceList extends Model
 {
@@ -22,7 +24,7 @@ class PriceList extends Model
         return $this->belongsToMany('App\Good');
     }
 
-    public function users()
+    public function user()
     {
         return $this->hasOne('App\User');
     }

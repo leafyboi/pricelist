@@ -22,4 +22,6 @@ Route::group([], function () {
     Route::post('register','AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout')->middleware('auth:api');
+    Route::post('good', 'GoodsController@addGood');
+    Route::post('price_list', 'PriceListsController@addPriceList');
 });
