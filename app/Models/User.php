@@ -36,7 +36,7 @@ class User extends Authenticatable
 
     public function priceLists()
     {
-        return $this->belongsToMany('App\PriceList');
+        return $this->belongsToMany('App\Models\PriceList');
     }
 
     public function generateToken()

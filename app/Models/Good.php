@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Model;
  * @package App
  * @property int $id
  * @property string $name
- * @property string $decription
+ * @property string $description
  * @property int $article_code
  * @property int $price
  * @property int $price_list_id
+ *
+ * @property PriceList $priceLists
  */
 class Good extends Model
 {
@@ -22,6 +24,6 @@ class Good extends Model
 
     public function priceLists()
     {
-        return $this->belongsToMany('App\PriceList');
+        return $this->belongsToMany('App\Models\PriceList');
     }
 }
