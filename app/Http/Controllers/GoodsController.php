@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Good;
 use App\Models\PriceList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GoodsController extends Controller
 {
@@ -33,7 +34,7 @@ class GoodsController extends Controller
                 'errors' => [
                     'type' => 'PriceListNotFound',
                     'message' => 'Прайс-лист с данным ID не найден.'],
-                'message' => 'В процессе добавления товара произошли ошибки'
+                'message' => 'В процессе добавления товара возникли ошибки.'
             ], 201);
         }
         else {
@@ -42,7 +43,98 @@ class GoodsController extends Controller
                     'id' => $good->id,
                 ],
                 'message' => 'Товар успешно добавлен.'
-            ]);
+            ], 201);
+        }
+    }
+
+    public function getAllGoods(Request $request)
+    {
+        $goods = Good::orderBy('created_at', 'asc')->get();
+
+        return response()->json([
+            'goods' => $goods
+        ], 200);
+    }
+
+    public function getGood(Request $request)
+    {
+        $good_id = $request->input('id');
+
+        $good = Good::find($good_id);
+
+        if ($good === null) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'GoodNotFound',
+                    'message' => 'Товар с данным ID не найден.'],
+                'message' => 'В процессе просмотра товара возникли ошибки.'
+            ], 404);
+        }
+        else {
+            return response()->json([
+                'good' => $good
+            ], 200);
+        }
+    }
+
+    public function updateGood(Request $request)
+    {
+        $good_id = $request->input('id');
+
+        $good = Good::find($good_id);
+
+        if ($good === null) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'GoodNotFound',
+                    'message' => 'Товар с данным ID не найден.'],
+                'message' => 'В процессе обновления товара возникли ошибки.'
+            ], 404);
+        }
+        else {
+            $good->fill($request->only([
+                'name' => $request->name,
+                'description' => $request->description,
+                'price' => $request->price,
+                'article_code' => $request->article_code
+            ]));
+
+            $good->save();
+
+            return response()->json([
+                'message' => 'Товар успешно обновлен'
+            ], 201);
+        }
+    }
+
+    public function deleteGood(Request $request)
+    {
+        $good_id = $request->input('id');
+
+        $good = Good::find($good_id);
+
+//        $user_id = Good::whereHas('price_list', function($q) use (){
+//            $q->find('user_id');
+//        });
+//
+//        $id = Auth::id();
+//
+//        if ($user_id !== $id);
+
+        if ($good === null) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'GoodNotFound',
+                    'message' => 'Товар с данным ID не найден.'],
+                'message' => 'В процессе удаления товара возникли ошибки.'
+            ], 404);
+        }
+        else {
+            $good->delete();
+
+            return response()->json([
+                'message' => 'Товар успешно удален.'
+            ], 201);
         }
     }
 }

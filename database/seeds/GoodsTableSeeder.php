@@ -16,9 +16,13 @@ class GoodsTableSeeder extends Seeder
 
         for ($i = 1; $i <= 10; $i++) {
             $name = 'Прайс-лист #'.$i;
+
             $price_list_id = ($i > 4) ? rand(1, 4) : 1;
+
             $description = 'Описание товара #'.$i;
+
             $article_code = $i + 1000;
+
             $price = rand(1000, 10000);
 
             $goods[] = [

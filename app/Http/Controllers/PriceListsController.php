@@ -99,7 +99,8 @@ class PriceListsController extends Controller
                 'errors' => [
                     'type' => 'PriceListNotFound',
                     'message' => 'Прайс-лист с данным ID не найден.'],
-                'message' => 'В процессе обновления информации о прайс-листе возникли ошибки.'],404);}
+                'message' => 'В процессе обновления информации о прайс-листе возникли ошибки.'],404);
+        }
         else {
             $price_list->fill($request->only([
                 'name' => $request->name,
@@ -108,7 +109,7 @@ class PriceListsController extends Controller
 
             return response()->json([
                 'message' => 'Прайс-лист успешно обновлен.'
-            ],201);
+            ], 201);
         }
     }
 
