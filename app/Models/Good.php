@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $price
  * @property int $price_list_id
  *
- * @property PriceList $priceLists
+ * @property PriceList $priceList
  */
 class Good extends Model
 {
@@ -22,8 +22,8 @@ class Good extends Model
         'name', 'description', 'article_code', 'price', 'price_list_id'
     ];
 
-    public function priceLists()
+    public function priceList()
     {
-        return $this->belongsToMany('App\Models\PriceList');
+        return $this->hasOne('App\Models\PriceList');
     }
 }

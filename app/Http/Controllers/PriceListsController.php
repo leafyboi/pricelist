@@ -6,6 +6,7 @@ use App\Models\PriceList;
 use App\Models\Good;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PriceListsController extends Controller
 {
@@ -13,7 +14,8 @@ class PriceListsController extends Controller
     {
         $name = $request->input('name');
         $description = $request->input('description');
-        $user_id = $request->input('user_id');
+
+        $user_id = Auth::id();
 
         $data = [
             'name' => $name,
@@ -32,8 +34,7 @@ class PriceListsController extends Controller
                     'message' => 'Пользователь с данным ID не найден.'],
                 'message' => 'В процессе создания прайс листа произошли ошибки'
             ], 201);
-        }
-        else {
+        } else {
             return response()->json([
                 'price_list' => [
                     'id' => $price_list->id,
@@ -43,46 +44,47 @@ class PriceListsController extends Controller
         }
     }
 
-    public function getUserPriceLists(Request $request)
+    public function getUserPriceLists()
     {
-        $user_id = $request->input('user_id');
+        $user_id = Auth::id();
 
-        $price_lists = PriceList::where('user_id', $user_id)->orderBy('created_at', 'asc')->get();
+        $price_lists = PriceList::where('user_id', $user_id)
+            ->orderBy('created_at', 'asc')
+            ->with('goods')
+            ->get();
 
-        $user = User::find($user_id);
-
-        if ($user === null) {
-            return response()->json([
-                'errors' => [
-                    'type' => 'UserNotFound',
-                    'message' => 'Пользователь с данным ID не найден.'],
-                'message' => 'В процессе просмотра прайс-листов произошли ошибки'
-            ], 201);
-        }
-        else {
             return response()->json([
                 'price_lists' => $price_lists
             ], 200);
-        }
+
     }
 
     public function getPriceList(Request $request)
     {
         $price_list_id = $request->input('id');
+        $user_id = $request->input('user_id');
+
+        $id = Auth::id();
 
         $price_list = PriceList::where('id', $price_list_id)
             ->with('goods')
             ->get();
 
-        if ($price_list === null) {
+        if ($id !== $user_id) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'PermissionDenied',
+                    'message' => 'У вас недостаточно прав для просмотра.'],
+                'message' => 'Произошла ошибка.'
+            ]);
+        } else if ($price_list === null) {
             return response()->json([
                 'errors' => [
                     'type' => 'PriceListNotFound',
                     'message' => 'Прайс-лист с данным ID не найден.'],
                 'message' => 'В процессе просмотра прайс-листа возникли ошибки'
             ], 201);
-        }
-        else {
+        } else {
             return response()->json([
                 'price_list' => $price_list
             ], 200);
@@ -92,16 +94,27 @@ class PriceListsController extends Controller
     public function updatePriceList(Request $request)
     {
         $price_list_id = $request->input('id');
+        $user_id = $request->input('user_id');
+
         $price_list = PriceList::find($price_list_id);
 
-        if ($price_list === null) {
+        $id = Auth::id();
+
+        if ($id !== $user_id) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'PermissionDenied',
+                    'message' => 'У вас недостаточно прав для просмотра.'],
+                'message' => 'Произошла ошибка.'
+            ]);
+        } else if ($price_list === null) {
             return response()->json([
                 'errors' => [
                     'type' => 'PriceListNotFound',
                     'message' => 'Прайс-лист с данным ID не найден.'],
-                'message' => 'В процессе обновления информации о прайс-листе возникли ошибки.'],404);
-        }
-        else {
+                'message' => 'В процессе обновления информации о прайс-листе возникли ошибки.'
+            ],404);
+        } else {
             $price_list->fill($request->only([
                 'name' => $request->name,
                 'description' => $request->description]));
@@ -116,18 +129,27 @@ class PriceListsController extends Controller
     public function deletePriceList(Request $request)
     {
         $price_list_id = $request->input('id');
+        $user_id = $request->input('user_id');
+
+        $id = Auth::id();
 
         $price_list = PriceList::find($price_list_id);
 
-        if ($price_list === null) {
+        if ($id !== $user_id) {
+            return response()->json([
+                'errors' => [
+                    'type' => 'PermissionDenied',
+                    'message' => 'У вас недостаточно прав для просмотра.'],
+                'message' => 'Произошла ошибка.'
+            ]);
+        } else if ($price_list === null) {
             return response()->json([
                 'errors' => [
                     'type' => 'PriceListNotFound',
                     'message' => 'Прайс-лист с таким id не найден.'],
                 'message' => 'В процессе удаления прайс-листа возникли ошибки.'
             ], 404);
-        }
-        else {
+        } else {
             $price_list->delete();
 
             return response()->json([

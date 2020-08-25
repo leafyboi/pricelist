@@ -23,17 +23,17 @@ Route::group([], function () {
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout')->middleware('auth:api');
 
-    Route::get('price_list', 'PriceListsController@getPriceList');
-    Route::get('price_lists', 'PriceListsController@getUserPriceLists');
 
     Route::get('good', 'GoodsController@getGood');
     Route::get('goods', 'GoodsController@getAllGoods');
 });
 
 Route::middleware(['auth:api'])->group(function () {
+    Route::get('price_list', 'PriceListsController@getPriceList');
     Route::post('price_list', 'PriceListsController@addPriceList');
     Route::patch('price_list', 'PriceListsController@updatePriceList');
     Route::delete('price_list', 'PriceListsController@deletePriceList');
+    Route::get('price_lists', 'PriceListsController@getUserPriceLists');
 
     Route::post('good', 'GoodsController@addGood');
     Route::patch('good', 'GoodsController@updateGood');

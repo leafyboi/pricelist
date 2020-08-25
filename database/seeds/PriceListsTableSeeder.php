@@ -16,9 +16,7 @@ class PriceListsTableSeeder extends Seeder
 
         for ($i = 1; $i <=10; $i++) {
             $name = 'Прайс-лист #'.$i;
-
             $user_id = 1;
-
             $description = 'Описание прайс-листа #'.$i;
 
             $priceLists[] = [

@@ -36,12 +36,11 @@ class GoodsController extends Controller
                     'message' => 'Прайс-лист с данным ID не найден.'],
                 'message' => 'В процессе добавления товара возникли ошибки.'
             ], 201);
-        }
-        else {
+        } else {
             return response()->json([
                 'good' => [
-                    'id' => $good->id,
-                ],
+                    'id' => $good->id
+                    ],
                 'message' => 'Товар успешно добавлен.'
             ], 201);
         }
@@ -69,8 +68,7 @@ class GoodsController extends Controller
                     'message' => 'Товар с данным ID не найден.'],
                 'message' => 'В процессе просмотра товара возникли ошибки.'
             ], 404);
-        }
-        else {
+        } else {
             return response()->json([
                 'good' => $good
             ], 200);
@@ -90,8 +88,7 @@ class GoodsController extends Controller
                     'message' => 'Товар с данным ID не найден.'],
                 'message' => 'В процессе обновления товара возникли ошибки.'
             ], 404);
-        }
-        else {
+        } else {
             $good->fill($request->only([
                 'name' => $request->name,
                 'description' => $request->description,
@@ -113,14 +110,6 @@ class GoodsController extends Controller
 
         $good = Good::find($good_id);
 
-//        $user_id = Good::whereHas('price_list', function($q) use (){
-//            $q->find('user_id');
-//        });
-//
-//        $id = Auth::id();
-//
-//        if ($user_id !== $id);
-
         if ($good === null) {
             return response()->json([
                 'errors' => [
@@ -128,8 +117,7 @@ class GoodsController extends Controller
                     'message' => 'Товар с данным ID не найден.'],
                 'message' => 'В процессе удаления товара возникли ошибки.'
             ], 404);
-        }
-        else {
+        } else {
             $good->delete();
 
             return response()->json([
