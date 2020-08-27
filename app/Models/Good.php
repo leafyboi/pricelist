@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property string $description
- * @property int $article_code
+ * @property int $articleCode
  * @property int $price
- * @property int $price_list_id
+ * @property int $priceListId
  *
  * @property PriceList $priceList
  */

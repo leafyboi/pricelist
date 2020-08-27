@@ -14,22 +14,22 @@ class GoodsController extends Controller
         $name = $request->input('name');
         $description = $request->input('description');
         $price = $request->input('price');
-        $article_code = $request->input('article_code');
-        $price_list_id = $request->input('price_list_id');
+        $articleCode = $request->input('article_code');
+        $priceListId = $request->input('price_list_id');
 
         $data = [
             'name' => $name,
             'description' => $description,
             'price' => $price,
-            'article_code' => $article_code,
-            'price_list_id' => $price_list_id
+            'article_code' => $articleCode,
+            'price_list_id' => $priceListId
         ];
 
         $good = Good::create($data);
 
-        $price_list = PriceList::find($price_list_id);
+        $priceList = PriceList::find($priceListId);
 
-        if ($price_list === null) {
+        if ($priceList === null) {
             return response()->json([
                 'errors' => [
                     'type' => 'PriceListNotFound',
@@ -46,7 +46,7 @@ class GoodsController extends Controller
         }
     }
 
-    public function getAllGoods(Request $request)
+    public function getAllGoods()
     {
         $goods = Good::orderBy('created_at', 'asc')->get();
 
@@ -57,9 +57,9 @@ class GoodsController extends Controller
 
     public function getGood(Request $request)
     {
-        $good_id = $request->input('id');
+        $goodId = $request->input('id');
 
-        $good = Good::find($good_id);
+        $good = Good::find($goodId);
 
         if ($good === null) {
             return response()->json([
@@ -77,9 +77,9 @@ class GoodsController extends Controller
 
     public function updateGood(Request $request)
     {
-        $good_id = $request->input('id');
+        $goodId = $request->input('id');
 
-        $good = Good::find($good_id);
+        $good = Good::find($goodId);
 
         if ($good === null) {
             return response()->json([
@@ -106,9 +106,9 @@ class GoodsController extends Controller
 
     public function deleteGood(Request $request)
     {
-        $good_id = $request->input('id');
+        $goodId = $request->input('id');
 
-        $good = Good::find($good_id);
+        $good = Good::find($goodId);
 
         if ($good === null) {
             return response()->json([

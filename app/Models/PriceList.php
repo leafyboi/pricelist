@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  * @property string $name
  * @property string $description
- * @property int $user_id
+ * @property int $userId
  *
  * @property Good $goods
  * @property User $user

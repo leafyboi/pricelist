@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
  * @property string $api_token
  *
  * @property User $user
- * @property PriceList $price_list
+ * @property PriceList $priceList
  */
 class User extends Authenticatable
 {
